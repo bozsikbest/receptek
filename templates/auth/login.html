@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Bejelentkezés - Receptkezelő{% endblock %}
+
+{% block additional_styles %}
+.signup {
+    text-align: center;
+    color: #7d7d7d;
+}
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="icon">
+        <i class="fa fa-user"></i>
+    </div>
+    <form method="POST" action="{{ url_for('auth.login') }}">
+        {{ form.hidden_tag() }}
+        <h2 class="text-center mb-4">Bejelentkezés</h2>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="field">
+            <div class="input-container">
+                {{ form.username(class="form-control", placeholder="Felhasználónév") }}
+                <span class="fa fa-user"></span>
+            </div>
+        </div>
+        <div class="field">
+            <div class="input-container">
+                {{ form.password(class="form-control", placeholder="Jelszó") }}
+                <span class="fa fa-lock"></span>
+            </div>
+        </div>
+        <div class="form-check mb-3">
+            {{ form.remember_me(class="form-check-input") }}
+            {{ form.remember_me.label(class="form-check-label") }}
+        </div>
+        <div class="btn-container">
+            <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
+        </div>
+        <div class="signup">
+            Nincs még fiókod? <a href="{{ url_for('auth.register') }}">Regisztráció</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

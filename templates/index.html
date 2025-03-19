@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="hu" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receptkezelő</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/{{ tinymce_api_key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+    
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="text-center mb-4">Receptkezelő</h1>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <input type="text" id="search" class="form-control" placeholder="Keresés...">
+                        <ul id="results" class="list-group mt-2"></ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Új recept hozzáadása</h3>
+                        <form id="add-recipe" class="mt-4">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Recept neve</label>
+                                <input type="text" id="name" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ingredient">Hozzávalók:</label>
+                                <div id="ingredients-list"></div>
+                                <button type="button" class="btn btn-secondary mt-2" onclick="addIngredient()">
+                                    <i class="fas fa-plus"></i> Hozzávaló hozzáadása
+                                </button>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Elkészítés</label>
+                                <textarea id="content" class="form-control"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Recept mentése</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        tinymce.init({
+            selector: '#content',
+            skin: 'oxide-dark',
+            content_css: 'dark',
+            plugins: 'image link media lists',
+            toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image media',
+            menubar: true,
+            height: 500,
+            promotion: false,
+            statusbar: false,
+            branding: false,
+            setup: function(editor) {
+                editor.on('init', function() {
+                    editor.getBody().style.backgroundColor = '#2d2d2d';
+                    editor.getBody().style.color = '#ffffff';
+                });
+            }
+        });
+
+        function addIngredient() {
+            const container = document.getElementById('ingredients-list');
+            const div = document.createElement('div');
+            div.classList.add('input-group', 'mt-2');
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.classList.add('form-control');
+            input.placeholder = 'Hozzávaló';
+            input.required = true;
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.classList.add('btn', 'btn-danger');
+            button.innerHTML = '×';
+            button.onclick = function() {
+                div.remove();
+            };
+
+            div.appendChild(input);
+            div.appendChild(button);
+            container.appendChild(div);
+        }
+
+        const socket = io();
+
+        document.getElementById('search').addEventListener('input', function() {
+            socket.emit('search', { query: this.value });
+        });
+
+        socket.on('search_results', function(data) {
+            const resultsList = document.getElementById('results');
+            resultsList.innerHTML = '';
+            data.forEach(recipe => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.innerHTML = `<a href="/recipe/${recipe.id}" class="text-decoration-none">${recipe.name}</a>`;
+                resultsList.appendChild(li);
+            });
+        });
+
+        socket.on('error', function(data) {
+            alert(data.message);
+        });
+
+        document.getElementById('add-recipe').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const ingredients = Array.from(document.querySelectorAll('#ingredients-list input')).map(input => input.value);
+            const content = tinymce.get('content').getContent();
+
+            try {
+                const response = await fetch('/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, ingredients, content })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                    document.getElementById('add-recipe').reset();
+                    document.getElementById('ingredients-list').innerHTML = '';
+                    tinymce.get('content').setContent('');
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('Hiba történt a recept mentése során');
+            }
+        });
+
+        // Add initial ingredient field
+        addIngredient();
+    </script>
+</body>
+</html>
