@@ -69,6 +69,17 @@ app.register_blueprint(auth, url_prefix='/auth')
 def index():
     return render_template('home.html')
 
+@app.route('/api/recipes/<int:page>')
+def get_recipes(page):
+    per_page = 10
+    recipes = Recipe.query.order_by(Recipe.id.desc()).offset(page * per_page).limit(per_page).all()
+    return jsonify([{
+        'id': recipe.id,
+        'name': recipe.name,
+        'ingredients': recipe.get_ingredients(),
+        'content': recipe.content
+    } for recipe in recipes])
+
 @app.route('/upload')
 @login_required
 def upload():
