@@ -6,6 +6,17 @@
 {% block extra_head %}
 <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 <script src="https://cdn.tiny.cloud/1/{{ tinymce_api_key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    function updateTinyMCETheme() {
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        if (tinymce.activeEditor) {
+            tinymce.activeEditor.setContent(tinymce.activeEditor.getContent());
+            tinymce.activeEditor.dom.addStyle(
+                `body { background-color: ${isDark ? '#212529' : '#ffffff'}; color: ${isDark ? '#ffffff' : '#000000'}; }`
+            );
+        }
+    }
+</script>
 {% endblock %}
 
 {% block content %}
