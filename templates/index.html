@@ -6,6 +6,7 @@
 {% block extra_head %}
 <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 <script src="https://cdn.tiny.cloud/1/{{ tinymce_api_key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script>
     function updateTinyMCETheme() {
         const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
@@ -45,7 +46,7 @@
                             <label for="ingredient">Hozzávalók:</label>
                             <div id="ingredients-list"></div>
                             <button type="button" class="btn btn-secondary mt-2" onclick="addIngredient()">
-                                <i class="fas fa-plus"></i> Hozzávaló hozzáadása
+                                Hozzávaló hozzáadása
                             </button>
                         </div>
 
@@ -67,6 +68,7 @@
 <script>
     tinymce.init({
         selector: '#content',
+        language: 'hu_HU',
         skin: 'oxide-dark',
         content_css: 'dark',
         plugins: 'image link media lists',
