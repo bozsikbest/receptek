@@ -1,0 +1,76 @@
+
+{% extends "base.html" %}
+
+{% block title %}Kezdőlap - Receptkezelő{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="text-center mb-4">Legújabb receptek</h1>
+            <div id="recipes-container"></div>
+            <div id="loading" class="text-center d-none">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Betöltés...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPage = 0;
+let loading = false;
+let hasMore = true;
+
+async function loadRecipes() {
+    if (loading || !hasMore) return;
+
+    loading = true;
+    document.getElementById('loading').classList.remove('d-none');
+
+    try {
+        const response = await fetch(`/api/recipes/${currentPage}`);
+        const recipes = await response.json();
+
+        if (recipes.length < 10) {
+            hasMore = false;
+        }
+
+        if (recipes.length > 0) {
+            const container = document.getElementById('recipes-container');
+            recipes.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'card mb-3';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${recipe.name}</h5>
+                        <p class="card-text">Hozzávalók: ${recipe.ingredients.join(', ')}</p>
+                        <a href="/recipe/${recipe.id}" class="btn btn-primary">Recept megtekintése</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            currentPage++;
+        }
+    } catch (error) {
+        console.error('Error loading recipes:', error);
+    } finally {
+        loading = false;
+        document.getElementById('loading').classList.add('d-none');
+    }
+}
+
+// Initial load
+loadRecipes();
+
+// Infinite scroll
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+        loadRecipes();
+    }
+});
+</script>
+{% endblock %}
