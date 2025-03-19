@@ -78,6 +78,20 @@
         promotion: false,
         statusbar: false,
         branding: false,
+        file_picker_callback: function (cb, value, meta) {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.onchange = function () {
+                const file = this.files[0];
+                const reader = new FileReader();
+                reader.onload = function () {
+                    cb(reader.result, { title: file.name });
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        },
         setup: function(editor) {
             editor.on('init', function() {
                 editor.getBody().style.backgroundColor = '#2d2d2d';
