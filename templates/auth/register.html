@@ -1,12 +1,10 @@
+
 {% extends "base.html" %}
 
 {% block title %}Regisztráció - Receptkezelő{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="form-container">
+<div class="form-container">
     <div class="icon">
         <i class="fa fa-user-plus"></i>
     </div>
@@ -29,7 +27,6 @@
                 <div class="text-danger">{{ error }}</div>
             {% endfor %}
         </div>
-        
         <div class="field">
             <div class="input-container">
                 {{ form.password(class="form-control", placeholder="Jelszó") }}
@@ -42,12 +39,9 @@
         <div class="btn-container">
             <button type="submit" class="btn btn-primary w-100">Regisztráció</button>
         </div>
-        <div class="text-center text-muted">
+        <div class="text-center text-muted mt-3">
             Már van fiókod? <a href="{{ url_for('auth.login') }}">Bejelentkezés</a>
         </div>
     </form>
-</div>
-        </div>
-    </div>
 </div>
 {% endblock %}

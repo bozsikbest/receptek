@@ -1,47 +1,87 @@
-
 {% extends "base.html" %}
 
 {% block title %}{{ recipe.name }} - Receptkezelő{% endblock %}
 
-{% block additional_styles %}
+{% block extra_head %}
 <style>
 .recipe-content img {
     max-width: 100%;
     height: auto;
-    display: block;
-    margin: 1rem auto;
+    border-radius: 6px;
+    border: 1px solid var(--custom-component-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+}
+
+.recipe-card {
+    border: 1px solid var(--custom-component-border);
+    background-color: var(--custom-card-bg);
+    box-shadow: var(--custom-shadow);
+    padding: 1.5rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+.recipe-section {
+    background-color: var(--custom-container-bg);
+    border: 1px solid var(--custom-component-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--custom-shadow);
+}
+
+.recipe-section h3 {
+    border-bottom: 1px solid var(--custom-component-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--custom-highlight);
+    font-weight: 500;
+}
+
+.ingredient-item {
+    background-color: var(--custom-card-bg);
+    border: 1px solid var(--custom-component-border);
+    margin-bottom: 0.5rem;
+    border-radius: 6px !important;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.ingredient-item:hover {
+    transform: translateX(2px);
+    background-color: var(--custom-container-bg);
+    border-left-color: var(--custom-highlight);
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h1 class="card-title text-center mb-4">{{ recipe.name }}</h1>
-                    
-                    <div class="mb-4">
-                        <h3>Hozzávalók:</h3>
-                        <ul class="list-group">
-                            {% for ingredient in recipe.get_ingredients() %}
-                                <li class="list-group-item">{{ ingredient }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="recipe-card">
+            <h1 class="text-center mb-4" style="color: var(--custom-highlight);">{{ recipe.name }}</h1>
+            
+            <div class="recipe-section">
+                <h3><i class="fa fa-shopping-basket" aria-hidden="true"></i> Hozzávalók</h3>
+                <ul class="list-group list-unstyled">
+                    {% for ingredient in recipe.get_ingredients() %}
+                        <li class="ingredient-item">{{ ingredient }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-                    <div class="mb-4">
-                        <h3>Elkészítés:</h3>
-                        <div class="border rounded p-3">
-                            {{ recipe.content | safe }}
-                        </div>
-                    </div>
-
-                    <a href="/" class="btn btn-primary">
-                        Vissza a főoldalra
-                    </a>
+            <div class="recipe-section">
+                <h3><i class="fa fa-book" aria-hidden="true"></i> Elkészítés</h3>
+                <div class="recipe-content">
+                    {{ recipe.content | safe }}
                 </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/" class="btn btn-primary">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i> Vissza a főoldalra
+                </a>
             </div>
         </div>
     </div>

@@ -13,6 +13,8 @@ def create_admin():
         print("A felhasználónév megadása kötelező!")
         return
 
+    
+
     password = getpass("Jelszó: ")
     confirm_password = getpass("Jelszó megerősítése: ")
 
@@ -21,7 +23,7 @@ def create_admin():
         return
 
     if len(password) < 4:
-        print("A jelszónak legalább 4 karakter hosszúnak kell lennie!")
+        print("A jelszónak legalább 6 karakter hosszúnak kell lennie!")
         return
 
     try:
@@ -31,6 +33,8 @@ def create_admin():
                 print("A felhasználónév már foglalt!")
                 return
             
+           
+
             user = User(username=username, role=UserRole.ADMIN.value)
             user.set_password(password)
             db.session.add(user)

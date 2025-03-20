@@ -1,0 +1,46 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.name }} - Receptkezelő{% endblock %}
+
+{% block extra_head %}
+<style>
+.recipe-content img {
+    overflow: hidden !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-4">{{ recipe.name }}</h1>
+                    
+                    <div class="mb-4">
+                        <h3>Hozzávalók:</h3>
+                        <ul class="list-group">
+                            {% for ingredient in recipe.get_ingredients() %}
+                                <li class="list-group-item">{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3>Elkészítés:</h3>
+                        <div class="border rounded p-3 recipe-content" style="overflow-y: scroll;">
+                            {{ recipe.content | safe }}
+                        </div>
+                    </div>
+
+                    <a href="/" class="btn btn-primary">
+                        Vissza a főoldalra
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

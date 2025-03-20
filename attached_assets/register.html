@@ -1,16 +1,18 @@
-
 {% extends "base.html" %}
 
-{% block title %}Bejelentkezés - Receptkezelő{% endblock %}
+{% block title %}Regisztráció - Receptkezelő{% endblock %}
 
 {% block content %}
-<div class="form-container">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="form-container">
     <div class="icon">
-        <i class="fa fa-user"></i>
+        <i class="fa fa-user-plus"></i>
     </div>
-    <form method="POST" action="{{ url_for('auth.login') }}">
+    <form method="POST" action="{{ url_for('auth.register') }}">
         {{ form.hidden_tag() }}
-        <h2 class="text-center mb-4">Bejelentkezés</h2>
+        <h2 class="text-center mb-4">Regisztráció</h2>
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
@@ -23,23 +25,29 @@
                 {{ form.username(class="form-control", placeholder="Felhasználónév") }}
                 <span class="fa fa-user"></span>
             </div>
+            {% for error in form.username.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
         </div>
+        
         <div class="field">
             <div class="input-container">
                 {{ form.password(class="form-control", placeholder="Jelszó") }}
                 <span class="fa fa-lock"></span>
             </div>
-        </div>
-        <div class="form-check mb-3">
-            {{ form.remember_me(class="form-check-input") }}
-            {{ form.remember_me.label(class="form-check-label") }}
+            {% for error in form.password.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
         </div>
         <div class="btn-container">
-            <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
+            <button type="submit" class="btn btn-primary w-100">Regisztráció</button>
         </div>
-        <div class="text-center text-muted mt-3">
-            Nincs még fiókod? <a href="{{ url_for('auth.register') }}">Regisztráció</a>
+        <div class="text-center text-muted">
+            Már van fiókod? <a href="{{ url_for('auth.login') }}">Bejelentkezés</a>
         </div>
     </form>
+</div>
+        </div>
+    </div>
 </div>
 {% endblock %}

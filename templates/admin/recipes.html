@@ -2,65 +2,60 @@
 
 {% block title %}Receptek kezelése - Receptkezelő{% endblock %}
 
-{% block additional_styles %}
-.admin-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
-{% endblock %}
-
 {% block content %}
-<div class="admin-container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Receptek kezelése</h1>
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> Vissza a vezérlőpulthoz
-        </a>
-    </div>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Receptek kezelése</h1>
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"></i> Vissza a vezérlőpulthoz
+                </a>
+            </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Recept neve</th>
-                            <th>Készítette</th>
-                            <th>Hozzávalók száma</th>
-                            <th>Műveletek</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for recipe in recipes %}
-                            <tr>
-                                <td>{{ recipe.name }}</td>
-                                <td>{{ recipe.user.username }}</td>
-                                <td>{{ recipe.get_ingredients()|length }}</td>
-                                <td>
-                                    <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary btn-sm">
-                                        <i class="fa fa-eye"></i> Megtekintés
-                                    </a>
-                                    <form action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}" method="POST" class="d-inline"
-                                          onsubmit="return confirm('Biztosan törölni szeretnéd ezt a receptet?');">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-trash"></i> Törlés
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Recept neve</th>
+                                    <th>Készítette</th>
+                                    <th>Hozzávalók száma</th>
+                                    <th>Műveletek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for recipe in recipes %}
+                                    <tr>
+                                        <td>{{ recipe.name }}</td>
+                                        <td>{{ recipe.user.username }}</td>
+                                        <td>{{ recipe.get_ingredients()|length }}</td>
+                                        <td>
+                                            <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary btn-sm">
+                                                <i class="fa fa-eye"></i> Megtekintés
+                                            </a>
+                                            <form action="{{ url_for('admin.delete_recipe', recipe_id=recipe.id) }}" method="POST" class="d-inline"
+                                                onsubmit="return confirm('Biztosan törölni szeretnéd ezt a receptet?');">
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fa fa-trash"></i> Törlés
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

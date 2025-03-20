@@ -2,88 +2,204 @@
 
 {% block title %}Admin Vezérlőpult - Receptkezelő{% endblock %}
 
-{% block additional_styles %}
-.admin-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
-.stats-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
+{% block extra_head %}
+<style>
+    .dashboard-title {
+        color: var(--custom-highlight);
+        font-weight: 700;
+        margin-bottom: 2rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--custom-component-border);
+        display: flex;
+        align-items: center;
+    }
+    
+    .dashboard-title i {
+        margin-right: 0.75rem;
+    }
+    
+    .stat-card {
+        background-color: var(--custom-card-bg);
+        border: 1px solid var(--custom-component-border);
+        border-radius: 8px;
+        box-shadow: var(--custom-shadow);
+        height: 100%;
+        transition: transform 0.2s ease;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--custom-highlight);
+    }
+    
+    .stat-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--custom-highlight);
+    }
+    
+    .stat-value {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--custom-text);
+        margin-bottom: 1.5rem;
+    }
+    
+    .list-section {
+        background-color: var(--custom-card-bg);
+        border: 1px solid var(--custom-component-border);
+        border-radius: 8px;
+        box-shadow: var(--custom-shadow);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+    
+    .list-section-header {
+        background-color: var(--custom-highlight);
+        color: white;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        border-bottom: 1px solid var(--custom-component-border);
+        display: flex;
+        align-items: center;
+    }
+    
+    .list-section-header i {
+        margin-right: 0.75rem;
+    }
+    
+    .list-section-body {
+        padding: 1.5rem;
+    }
+    
+    .list-item {
+        background-color: var(--custom-container-bg);
+        border: 1px solid var(--custom-component-border);
+        margin-bottom: 0.75rem;
+        padding: 1rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    
+    .list-item:hover {
+        transform: translateX(2px);
+        border-left-color: var(--custom-highlight);
+    }
+    
+    .list-item-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: var(--custom-text);
+    }
+    
+    .list-item-subtitle {
+        color: var(--custom-highlight);
+        font-size: 0.875rem;
+    }
+    
+    .list-badge {
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        background-color: var(--custom-highlight);
+        color: white;
+    }
+    
+    .action-btn {
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="admin-container">
-    <h1 class="mb-4">Admin Vezérlőpult</h1>
+<div class="row">
+    <div class="col-12">
+        <h1 class="dashboard-title">
+            <i class="fa fa-dashboard" aria-hidden="true"></i> Admin Vezérlőpult
+        </h1>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mb-4">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-    <div class="stats-cards">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Felhasználók</h5>
-                <p class="card-text display-4">{{ users|length }}</p>
-                <a href="{{ url_for('admin_users') }}" class="btn btn-primary">Kezelés</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Receptek</h5>
-                <p class="card-text display-4">{{ recipes|length }}</p>
-                <a href="{{ url_for('admin_recipes') }}" class="btn btn-primary">Kezelés</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Legújabb felhasználók</h5>
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="stat-card">
+                    <h3 class="stat-title">
+                        <i class="fa fa-users" aria-hidden="true"></i> Felhasználók
+                    </h3>
+                    <p class="stat-value">{{ users|length }}</p>
+                    <a href="{{ url_for('admin.users') }}" class="btn btn-primary action-btn">
+                        <i class="fa fa-cog" aria-hidden="true"></i> Kezelés
+                    </a>
                 </div>
-                <div class="card-body">
-                    <div class="list-group">
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="stat-card">
+                    <h3 class="stat-title">
+                        <i class="fa fa-book" aria-hidden="true"></i> Receptek
+                    </h3>
+                    <p class="stat-value">{{ recipes|length }}</p>
+                    <a href="{{ url_for('admin.recipes') }}" class="btn btn-primary action-btn">
+                        <i class="fa fa-cog" aria-hidden="true"></i> Kezelés
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="list-section">
+                    <div class="list-section-header">
+                        <i class="fa fa-user-plus" aria-hidden="true"></i> Legújabb felhasználók
+                    </div>
+                    <div class="list-section-body">
                         {% for user in users[:5] %}
-                            <div class="list-group-item">
+                            <div class="list-item">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="mb-0">{{ user.username }}</h6>
-                                        <small class="text-muted">{{ user.email }}</small>
+                                        <h6 class="list-item-title">{{ user.username }}</h6>
                                     </div>
-                                    <span class="badge bg-primary">{{ user.recipes|length }} recept</span>
+                                    <span class="list-badge">{{ user.recipes|length }} recept</span>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Legújabb receptek</h5>
-                </div>
-                <div class="card-body">
-                    <div class="list-group">
+            <div class="col-md-6 mb-3">
+                <div class="list-section">
+                    <div class="list-section-header">
+                        <i class="fa fa-fire" aria-hidden="true"></i> Legújabb receptek
+                    </div>
+                    <div class="list-section-body">
                         {% for recipe in recipes[:5] %}
-                            <div class="list-group-item">
+                            <div class="list-item">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="mb-0">{{ recipe.name }}</h6>
-                                        <small class="text-muted">Készítette: {{ recipe.user.username }}</small>
+                                        <h6 class="list-item-title">{{ recipe.name }}</h6>
+                                        <div class="list-item-subtitle">
+                                            <i class="fa fa-user" aria-hidden="true"></i> {{ recipe.user.username }}
+                                        </div>
                                     </div>
-                                    <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}" class="btn btn-sm btn-outline-primary">Megtekintés</a>
+                                    <a href="{{ url_for('main.view_recipe', recipe_id=recipe.id) }}" class="btn btn-sm btn-outline-primary action-btn">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Megtekintés
+                                    </a>
                                 </div>
                             </div>
                         {% endfor %}

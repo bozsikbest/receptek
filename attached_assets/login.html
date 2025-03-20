@@ -1,7 +1,13 @@
-
 {% extends "base.html" %}
 
 {% block title %}Bejelentkezés - Receptkezelő{% endblock %}
+
+{% block additional_styles %}
+.signup {
+    text-align: center;
+    color: #7d7d7d;
+}
+{% endblock %}
 
 {% block content %}
 <div class="form-container">
@@ -37,7 +43,7 @@
         <div class="btn-container">
             <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
         </div>
-        <div class="text-center text-muted mt-3">
+        <div class="signup">
             Nincs még fiókod? <a href="{{ url_for('auth.register') }}">Regisztráció</a>
         </div>
     </form>

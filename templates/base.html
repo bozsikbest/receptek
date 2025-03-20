@@ -8,15 +8,36 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
         :root {
-            --custom-bg: var(--bs-dark);
-            --custom-text: var(--bs-light);
-            --custom-border: rgba(255, 255, 255, 0.1);
+            --custom-bg: #121212;  /* Dark background */
+            --custom-text: #ffffff;
+            --custom-border: rgba(255, 255, 255, 0.15);
+            --custom-component-border: rgba(255, 255, 255, 0.25);
+            --custom-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            --custom-card-bg: #1e1e1e;  /* Slightly lighter than background */
+            --custom-highlight: #4682B4;
+            --custom-container-bg: #181818;  /* In between page and card */
+            --bs-primary: #4682B4;
         }
 
         [data-bs-theme="light"] {
-            --custom-bg: var(--bs-light);
-            --custom-text: var(--bs-dark);
-            --custom-border: rgba(0, 0, 0, 0.1);
+            --custom-bg: #f5f5f5;  /* Light gray background */
+            --custom-text: #000000;
+            --custom-border: rgba(0, 0, 0, 0.1); 
+            --custom-component-border: rgba(0, 0, 0, 0.15);
+            --custom-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            --custom-card-bg: #ffffff;  /* White cards */
+            --custom-highlight: #4169E1;
+            --custom-container-bg: #f8f8f8;  /* Very subtle difference */
+            --bs-primary: #4169E1;
+        }
+
+        body {
+            background-color: var(--custom-bg);
+            color: var(--custom-text);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
         }
 
         .theme-switch {
@@ -27,8 +48,8 @@
             cursor: pointer;
             padding: 0.5rem;
             border-radius: 50%;
-            background: var(--custom-bg);
-            border: 1px solid var(--custom-border);
+            background: var(--custom-card-bg);
+            border: 2px solid var(--custom-component-border);
             color: var(--custom-text);
             width: 40px;
             height: 40px;
@@ -36,23 +57,43 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            box-shadow: var(--custom-shadow);
         }
 
         .main-container {
-            min-height: 100vh;
+            min-height: calc(100vh - 60px);
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--custom-bg);
             color: var(--custom-text);
+            padding: 0;
+            margin-top: -1rem;
+            width: 100%;
+        }
+
+        .container, .container-fluid {
+            /*background-color: var(--custom-container-bg);*/
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            /*border: 1px solid var(--custom-component-border);
+            box-shadow: var(--custom-shadow);*/
         }
 
         .form-container {
             width: 400px;
-            background: var(--custom-bg);
-            border: 1px solid var(--custom-border);
-            border-radius: 30px;
-            padding: 25px;
+            background: var(--custom-card-bg);
+            border: 1px solid var(--custom-component-border);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--custom-shadow);
+            position: relative;
+        }
+
+        .form-container::before {
+            content: none; /* Removed the extra highlight border */
         }
 
         .icon {
@@ -74,11 +115,21 @@
         }
 
         .field .form-control {
-            padding-right: 35px;
+            padding: 0.75rem 2.25rem 0.75rem 1rem;
             width: 100%;
-            background: var(--custom-bg);
+            background: var(--custom-container-bg);
             color: var(--custom-text);
-            border-color: var(--custom-border);
+            border: 2px solid var(--custom-component-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .field .form-control:focus {
+            border-color: var(--custom-highlight);
+            box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.25);
+            outline: none;
+            background-color: var(--custom-bg);
         }
 
         .field .fa {
@@ -92,7 +143,121 @@
             text-align: center;
             margin: 20px 0;
         }
+
+        .card {
+            background: var(--custom-card-bg);
+            border: 1px solid var(--custom-component-border);
+            border-radius: 10px;
+            box-shadow: var(--custom-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            padding: 1.25rem;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .navbar {
+            border-bottom: 1px solid var(--custom-component-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--custom-card-bg) !important;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--custom-text) !important;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 0.75rem 1.25rem !important;
+            margin: 0 0.35rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: var(--custom-text) !important;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link:focus {
+            background-color: var(--custom-container-bg);
+            border-color: var(--custom-component-border);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background-color: var(--custom-highlight) !important;
+            color: white !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn {
+            border-width: 1px;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            box-shadow: 0 2px 5px rgba(13, 110, 253, 0.2);
+            background-color: var(--custom-highlight);
+            border-color: var(--custom-highlight);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 7px rgba(13, 110, 253, 0.25);
+            filter: brightness(105%);
+        }
+
+        .list-group-item {
+            border: 1px solid var(--custom-component-border);
+            background-color: var(--custom-card-bg);
+            color: var(--custom-text);
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px !important;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .list-group-item:hover {
+            transform: translateX(3px);
+            background-color: var(--custom-container-bg);
+        }
+
+        .table {
+            border: 1px solid var(--custom-component-border);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--custom-card-bg);
+            box-shadow: var(--custom-shadow);
+            position: relative;
+        }
+
+        .table th, .table td {
+            border-color: var(--custom-component-border);
+            border-width: 1px;
+            padding: 12px 15px;
+            position: relative;
+        }
+
+        .table thead th {
+            background-color: var(--custom-highlight);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--custom-component-border);
+        }
     </style>
+    
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -101,46 +266,66 @@
     </button>
 
     
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container" style="background-color: var(--custom-card-bg);">
                 
-                <a class="navbar-brand" href="{{ url_for('upload') }}">Receptkezelő</a>
+                <a class="navbar-brand" href="{{ url_for('main.upload') }}">
+                    <i class="fa fa-cutlery" aria-hidden="true"></i> Receptkezelő
+                </a>
                 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                
+                    <div class="card-body">
+                        <input type="text" id="search" class="form-control" placeholder="Keresés...">
+                        <ul id="results" class="list-group mt-2"></ul>
+                    </div>
+                
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         {% if current_user.is_authenticated %}
                         {% if current_user.is_admin() %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Vezérlőpult</a>
+                                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                                    <i class="fa fa-dashboard" aria-hidden="true"></i> Admin Vezérlőpult
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_users') }}">Felhasználók</a>
+                                <a class="nav-link" href="{{ url_for('admin.users') }}">
+                                    <i class="fa fa-users" aria-hidden="true"></i> Felhasználók
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_recipes') }}">Receptek</a>
+                                <a class="nav-link" href="{{ url_for('admin.recipes') }}">
+                                    <i class="fa fa-book" aria-hidden="true"></i> Receptek
+                                </a>
                             </li>
                         {% endif %}
                         {% endif %}
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <span class="nav-link">{{ current_user.username }}</span>
+                            <span class="nav-link">
+                                <i class="fa fa-user" aria-hidden="true"></i> {{ current_user.username }}
+                            </span>
                         </li>
                         <li class="nav-item">
                             {% if current_user.is_authenticated %}
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Kijelentkezés</a>
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i> Kijelentkezés
+                            </a>
                             {% else %}
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">Bejelentkezés</a>
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i> Bejelentkezés
+                            </a>
                             {% endif %}
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-    
+        
     <div class="main-container">
         {% block content %}{% endblock %}
     </div>

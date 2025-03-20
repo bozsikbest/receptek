@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Vezérlőpult - Receptkezelő{% endblock %}
+
+{% block additional_styles %}
+.admin-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h1 class="mb-4">Admin Vezérlőpult</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="stats-cards">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Felhasználók</h5>
+                <p class="card-text display-4">{{ users|length }}</p>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-primary">Kezelés</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Receptek</h5>
+                <p class="card-text display-4">{{ recipes|length }}</p>
+                <a href="{{ url_for('admin_recipes') }}" class="btn btn-primary">Kezelés</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Legújabb felhasználók</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for user in users[:5] %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">{{ user.username }}</h6>
+                                        <small class="text-muted">{{ user.email }}</small>
+                                    </div>
+                                    <span class="badge bg-primary">{{ user.recipes|length }} recept</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Legújabb receptek</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for recipe in recipes[:5] %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">{{ recipe.name }}</h6>
+                                        <small class="text-muted">Készítette: {{ recipe.user.username }}</small>
+                                    </div>
+                                    <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}" class="btn btn-sm btn-outline-primary">Megtekintés</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
